@@ -8,3 +8,11 @@ export const createLeadService = async (
     data,
   });
 };
+
+export const getLeadsService = async () => {
+  return prisma.lead.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};

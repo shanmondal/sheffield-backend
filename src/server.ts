@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import leadRoutes from './routes/lead.routes';
 
+import routes from "./routes";
 dotenv.config();
 
 const app = express();
@@ -15,7 +15,7 @@ app.get('/', (_, res) => {
   res.send('Sheffield Backend Running');
 });
 
-app.use('/api/leads', leadRoutes);
+app.use("/api", routes);
 
 const PORT = process.env.PORT || 5000;
 
