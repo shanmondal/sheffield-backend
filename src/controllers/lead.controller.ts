@@ -23,15 +23,21 @@ export const createLead = async (req: Request, res: Response) => {
     }
 
     const lead = await createLeadService(req.body);
-    await sendLeadNotification({
-      name: lead.name,
-      email: lead.email,
-      company: lead.company ?? undefined,
-      phone: lead.phone ?? undefined,
-      subject: lead.subject ?? undefined,
-      message: lead.message,
-      type: lead.type,
-    });
+
+    try {
+      await sendLeadNotification({
+        name: lead.name,
+        email: lead.email,
+        company: lead.company ?? undefined,
+        phone: lead.phone ?? undefined,
+        subject: lead.subject ?? undefined,
+        message: lead.message,
+        type: lead.type,
+      });
+    } catch (error) {
+      console.error('Email notification failed:', error);
+    }
+
     return res.status(201).json(lead);
   } catch (error) {
     console.error(error);
