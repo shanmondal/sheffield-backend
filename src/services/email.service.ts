@@ -1,7 +1,9 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 export const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -9,13 +11,12 @@ export const transporter = nodemailer.createTransport({
 });
 transporter.verify((error, success) => {
   if (error) {
-    console.error("SMTP Error:", error);
+    console.error('SMTP Error:', error);
   } else {
-    console.log("SMTP Ready");
+    console.log('SMTP Ready');
   }
 });
-export const sendLeadNotification = async (
-  data: {
+export const sendLeadNotification = async (data: {
   name: string;
   email: string;
   company?: string | undefined;
@@ -23,8 +24,7 @@ export const sendLeadNotification = async (
   subject?: string | undefined;
   message: string;
   type: string;
-}
-) => {
+}) => {
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: process.env.EMAIL_USER,
@@ -34,9 +34,9 @@ export const sendLeadNotification = async (
 
       <p><strong>Name:</strong> ${data.name}</p>
       <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Company:</strong> ${data.company || "-"}</p>
-      <p><strong>Phone:</strong> ${data.phone || "-"}</p>
-      <p><strong>Subject:</strong> ${data.subject || "-"}</p>
+      <p><strong>Company:</strong> ${data.company || '-'}</p>
+      <p><strong>Phone:</strong> ${data.phone || '-'}</p>
+      <p><strong>Subject:</strong> ${data.subject || '-'}</p>
 
       <hr />
 
