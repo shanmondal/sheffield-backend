@@ -1,12 +1,16 @@
 import { Router } from 'express';
 import { createLead, getLeads } from '../controllers/lead.controller';
-const router = Router();
-export default router;
-router.get("/", getLeads);
-router.post("/", createLead);
+import { authenticateAdmin } from '../middleware/auth.middleware';
 
-router.get("/health", (_, res) => {
+const router = Router();
+
+router.get('/', authenticateAdmin, getLeads);
+router.post('/', createLead);
+
+router.get('/health', (_, res) => {
   res.json({
-    status: "ok",
+    status: 'ok',
   });
 });
+
+export default router;
