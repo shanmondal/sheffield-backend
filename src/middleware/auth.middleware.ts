@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { AuthRequest } from '../types/express';
 
 export const authenticateAdmin = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -17,7 +18,10 @@ export const authenticateAdmin = (
 
     const token = authHeader.replace('Bearer ', '');
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string,
+    ) as {
       username: string;
       role: string;
     };
@@ -25,7 +29,7 @@ export const authenticateAdmin = (
     req.user = decoded;
 
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({
       message: 'Invalid token',
     });
