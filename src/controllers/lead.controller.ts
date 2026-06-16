@@ -24,19 +24,17 @@ export const createLead = async (req: Request, res: Response) => {
 
     const lead = await createLeadService(req.body);
 
- sendLeadNotification({
-  name: lead.name,
-  email: lead.email,
-  company: lead.company ?? undefined,
-  phone: lead.phone ?? undefined,
-  subject: lead.subject ?? undefined,
-  message: lead.message,
-  type: lead.type,
-}).catch((error) => {
-  console.error('Email notification failed:', error);
-});
-
-return res.status(201).json(lead);
+    sendLeadNotification({
+      name: lead.name,
+      email: lead.email,
+      company: lead.company ?? undefined,
+      phone: lead.phone ?? undefined,
+      subject: lead.subject ?? undefined,
+      message: lead.message,
+      type: lead.type,
+    }).catch((error) => {
+      console.error('Email notification failed:', error);
+    });
 
     return res.status(201).json(lead);
   } catch (error) {
@@ -47,12 +45,17 @@ return res.status(201).json(lead);
   }
 };
 
-export const getLeads = async (_req: Request, res: Response) => {
+export const getLeads = async (req: Request, res: Response) => {
   try {
-    const leads = await getLeadsService();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 20;
 
-    return res.json(leads);
+    const result = await getLeadsService(page, limit);
+
+    return res.json(result);
   } catch (error) {
+    console.error(error);
+
     return res.status(500).json({
       message: 'Failed to fetch leads',
     });
